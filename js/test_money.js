@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var assert_1 = require("assert");
 var Dollar = /** @class */ (function () {
     function Dollar(num) {
