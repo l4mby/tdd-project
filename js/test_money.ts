@@ -44,6 +44,15 @@ class MoneyTest {
         })
     }
 
+    testAdditionOfDollarsAndEuros(){
+        let fiveDollars = new Money(5, "USD");
+        let tenEuros = new Money(10, "EUR");
+        let portfolio = new Portfolio();
+        portfolio.add(fiveDollars, tenEuros);
+        let expectedValue = new Money(17, "USD");
+        deepStrictEqual(portfolio.evaluate("USD"), expectedValue);
+    }
+
     getAllTestMethods() {
         let moneyPrototype = MoneyTest.prototype;
         let allProps = Object.getOwnPropertyNames(moneyPrototype);

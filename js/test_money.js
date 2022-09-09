@@ -41,6 +41,14 @@ class MoneyTest {
             }
         });
     }
+    testAdditionOfDollarsAndEuros() {
+        let fiveDollars = new money_1.Money(5, "USD");
+        let tenEuros = new money_1.Money(10, "EUR");
+        let portfolio = new portfolio_1.Portfolio();
+        portfolio.add(fiveDollars, tenEuros);
+        let expectedValue = new money_1.Money(17, "USD");
+        (0, assert_1.deepStrictEqual)(portfolio.evaluate("USD"), expectedValue);
+    }
     getAllTestMethods() {
         let moneyPrototype = MoneyTest.prototype;
         let allProps = Object.getOwnPropertyNames(moneyPrototype);
