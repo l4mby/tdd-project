@@ -1,16 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var assert_1 = require("assert");
-var Dollar = /** @class */ (function () {
-    function Dollar(num) {
-        this.amount = 0;
-        this.amount = num;
+const assert_1 = require("assert");
+class Money {
+    constructor(amount, currency) {
+        this.amount = amount;
+        this.currency = currency;
     }
-    Dollar.prototype.times = function (multiplier) {
-        return new Dollar(this.amount * multiplier);
-    };
-    return Dollar;
-}());
-var fiver = new Dollar(5);
-var tenner = fiver.times(2);
-(0, assert_1.strictEqual)(tenner.amount, 10);
+    times(multiplier) {
+        return new Money(this.amount * multiplier, this.currency);
+    }
+    divide(divisor) {
+        return new Money(this.amount / divisor, this.currency);
+    }
+}
+let fiver = new Money(5, "USD");
+let tenner = new Money(10, "USD");
+(0, assert_1.deepStrictEqual)(fiver.times(2), tenner);
+let tenEuros = new Money(10, "EUR");
+let twentyEuros = new Money(20, "EUR");
+(0, assert_1.deepStrictEqual)(tenEuros.times(2), twentyEuros);
+(0, assert_1.deepStrictEqual)(twentyEuros.currency, "EUR");
+let originalMoney = new Money(4002, "KRW");
+let actualMoneyAfterDivision = originalMoney.divide(4);
+let expectedMoneyAfterDivision = new Money(1000.5, "KRW");
+(0, assert_1.deepStrictEqual)(actualMoneyAfterDivision, expectedMoneyAfterDivision);
