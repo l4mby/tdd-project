@@ -15,11 +15,19 @@ export class Portfolio {
     }
 
     convert(money: Money, currency: "EUR" | "USD" | "KRW"){
-        let eurToUsd = 1.2; 
-        if(money.currency === currency)
+        let exchangeRates = new Map<string, number>(); 
+        exchangeRates.set("EUR->USD", 1.2);
+        exchangeRates.set("USD->KRW", 1100);
+        let key = money.currency + "->" + currency;
+        if(money.currency === currency){
             return money.amount;
-        else
-            return money.amount * eurToUsd;
+        } else {
+            let factor = exchangeRates.get(key)
+            if (factor === undefined)
+                return money.amount * 0;
+            else
+                return money.amount * factor;
+        }
     }
 
     constructor() {
