@@ -57,6 +57,15 @@ class MoneyTest {
         let expectedValue = new money_1.Money(2200, "KRW");
         (0, assert_1.deepStrictEqual)(portfolio.evaluate("KRW"), expectedValue);
     }
+    testAdditionWithMultipleMissingExchangeRates() {
+        let oneDollar = new money_1.Money(1, "USD");
+        let oneEuro = new money_1.Money(1, "EUR");
+        let oneWon = new money_1.Money(1, "KRW");
+        let portfolio = new portfolio_1.Portfolio();
+        portfolio.add(oneDollar, oneEuro, oneWon);
+        let expectedError = new Error("Missing exchange rate(s):[USD->Kalganid,EUR->Kalganid,KRW->Kalganid]");
+        (0, assert_1.throws)(function () { portfolio.evaluate("Kalganid"); }, expectedError);
+    }
     getAllTestMethods() {
         let moneyPrototype = MoneyTest.prototype;
         let allProps = Object.getOwnPropertyNames(moneyPrototype);

@@ -1,4 +1,4 @@
-import assert, { strictEqual, deepStrictEqual, AssertionError } from "assert"
+import assert, { strictEqual, deepStrictEqual, AssertionError, throws } from "assert"
 import { Money } from "./money"
 import { Portfolio } from "./portfolio"
 
@@ -60,6 +60,16 @@ class MoneyTest {
         portfolio.add(oneDollar, elevenHundredWon);
         let expectedValue = new Money(2200, "KRW");
         deepStrictEqual(portfolio.evaluate("KRW"), expectedValue);
+    }
+
+    testAdditionWithMultipleMissingExchangeRates() {
+        let oneDollar = new Money(1, "USD");
+        let oneEuro = new Money(1, "EUR");
+        let oneWon = new Money(1, "KRW");
+        let portfolio = new Portfolio();
+        portfolio.add(oneDollar, oneEuro, oneWon);
+        let expectedError = new Error("Missing exchange rate(s):[USD->Kalganid,EUR->Kalganid,KRW->Kalganid]");
+        throws(function() {portfolio.evaluate("Kalganid")}, expectedError);
     }
 
     getAllTestMethods() {

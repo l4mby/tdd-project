@@ -8,10 +8,19 @@ export class Portfolio {
     }
 
     evaluate(currency: "EUR" | "USD" | "KRW") : Money{
+        let failures: string[] = [];
         let total = this.moneys.reduce( (sum, money) => {
-            return sum + this.convert(money, currency);
+            let convertedAmount = this.convert(money, currency);
+            if (convertedAmount === undefined){
+                failures.push(money.currency + "->" + currency);
+                return sum;
+            }
+            return sum + convertedAmount;
         }, 0);
-        return new Money(total, currency);
+        if (!failures.length){
+            return new Money(total, currency);
+        }
+        throw new Error("Missing exchange rate(s):[" + failures.join() + "]")
     }
 
     convert(money: Money, currency: "EUR" | "USD" | "KRW"){
@@ -24,7 +33,7 @@ export class Portfolio {
         } else {
             let factor = exchangeRates.get(key)
             if (factor === undefined)
-                return money.amount * 0;
+                return undefined;
             else
                 return money.amount * factor;
         }
