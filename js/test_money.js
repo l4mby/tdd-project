@@ -7,6 +7,9 @@ const bank_1 = require("./bank");
 class MoneyTest {
     constructor() {
         this.bank = new bank_1.Bank();
+    }
+    setUp() {
+        this.bank = new bank_1.Bank();
         this.bank.addExchangeRate("EUR", "USD", 1.2);
         this.bank.addExchangeRate("USD", "KRW", 1100);
     }
@@ -35,6 +38,7 @@ class MoneyTest {
             console.log("Running %s()", m);
             let method = Reflect.get(this, m);
             try {
+                this.setUp();
                 Reflect.apply(method, this, []);
             }
             catch (error) {
@@ -72,17 +76,15 @@ class MoneyTest {
         let expectedError = new Error("Missing exchange rate(s):[USD->Kalganid,EUR->Kalganid,KRW->Kalganid]");
         (0, assert_1.throws)(() => portfolio.evaluate(this.bank, "Kalganid"), expectedError);
     }
-    testConversion() {
-        let bank = new bank_1.Bank();
-        bank.addExchangeRate("EUR", "USD", 1.2);
+    testConversionWithDifferentRatesBetweenTwoCurrencies() {
         let tenEuros = new money_1.Money(10, "EUR");
-        (0, assert_1.deepStrictEqual)(bank.convert(tenEuros, "USD"), new money_1.Money(12, "USD"));
+        (0, assert_1.deepStrictEqual)(this.bank.convert(tenEuros, "USD"), new money_1.Money(12, "USD"));
+        this.bank.addExchangeRate("EUR", "USD", 1.3);
+        (0, assert_1.deepStrictEqual)(this.bank.convert(tenEuros, "USD"), new money_1.Money(13, "USD"));
     }
-    testConversionWithMissingExchangeRate() {
-        let bank = new bank_1.Bank();
+    testWhatIsTheConversionRateFromEURToUSD() {
         let tenEuros = new money_1.Money(10, "EUR");
-        let expectedError = new Error("EUR->Kalganid");
-        (0, assert_1.throws)(function () { bank.convert(tenEuros, "Kalganid"); }, expectedError);
+        (0, assert_1.deepStrictEqual)(this.bank.convert(tenEuros, "USD"), new money_1.Money(12, "USD"));
     }
     getAllTestMethods() {
         let moneyPrototype = MoneyTest.prototype;
